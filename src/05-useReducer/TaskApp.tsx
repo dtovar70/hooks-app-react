@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { log } from 'console';
 
 interface Todo {
   id: number;
@@ -18,23 +19,40 @@ export const TasksApp = () => {
   const [inputValue, setInputValue] = useState('');
 
   const addTodo = () => {
-    console.log('Agregar tarea', inputValue);
+    if(inputValue.length === 0) return;
+
+    const newTodo: Todo = {
+        id: Date.now(),
+        text: inputValue.trim(),
+        completed: false
+    }
+
+    setTodos([...todos, newTodo])
+
+    setInputValue('');
 
   };
 
   const toggleTodo = (id: number) => {
-    console.log('Cambiar de true a false', id);
-
+    const updateTodos = todos.map( todo => {
+        if(todo.id === id){
+            return {...todo, completed: !todo.completed}
+        }
+        return todo;
+    });
+    setTodos(updateTodos);
   };
 
   const deleteTodo = (id: number) => {
-    console.log('Eliminar tarea', id);
-
+     const updateTodos = todos.filter(todo => todo.id !== id);
+     setTodos(updateTodos);
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
-    console.log('Presiono enter');
-
+    console.log(e.key);
+    if(e.key === 'Enter'){
+        addTodo();
+    }
   };
 
   const completedCount = todos.filter((todo) => todo.completed).length;
