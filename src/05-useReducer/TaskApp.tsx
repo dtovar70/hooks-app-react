@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useReducer, useState } from 'react';
 
 import { Plus, Trash2, Check } from 'lucide-react';
 
@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { getTasksInitialState, tasksReducer } from './reducer/tasksReducer';
 
 interface Todo {
   id: number;
@@ -14,24 +15,18 @@ interface Todo {
 }
 
 export const TasksApp = () => {
-  const [todos, setTodos] = useState<Todo[]>([]);
+  //const [todos, setTodos] = useState<Todo[]>([]);
   const [inputValue, setInputValue] = useState('');
+  const [state, dispatch] = useReducer( tasksReducer, getTasksInitialState() )
 
   const addTodo = () => {
     if(inputValue.length === 0) return;
 
-    const newTodo: Todo = {
-        id: Date.now(),
-        text: inputValue.trim(),
-        completed: false
-    }
-
-    setTodos([...todos, newTodo])
-
+    dispatch({type: 'ADD_TODO', payload: inputValue});
     setInputValue('');
 
   };
-
+// tengo que hacer esto de tearea
   const toggleTodo = (id: number) => {
     const updateTodos = todos.map( todo => {
         if(todo.id === id){
@@ -54,8 +49,7 @@ export const TasksApp = () => {
     }
   };
 
-  const completedCount = todos.filter((todo) => todo.completed).length;
-  const totalCount = todos.length;
+  const {todos, completed: completedCount, pending: pendingCount} = state;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 p-4">
