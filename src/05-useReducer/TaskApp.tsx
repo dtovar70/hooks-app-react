@@ -1,4 +1,4 @@
-import { useReducer, useState } from 'react';
+import { useEffect, useReducer, useState } from 'react';
 
 import { Plus, Trash2, Check } from 'lucide-react';
 
@@ -19,6 +19,10 @@ export const TasksApp = () => {
   const [inputValue, setInputValue] = useState('');
   const [state, dispatch] = useReducer( tasksReducer, getTasksInitialState() )
 
+  useEffect(() => {
+    localStorage.setItem('tasks-state', JSON.stringify(state));
+  }, [state]);
+
   const addTodo = () => {
     if(inputValue.length === 0) return;
 
@@ -26,30 +30,24 @@ export const TasksApp = () => {
     setInputValue('');
 
   };
+
 // tengo que hacer esto de tearea
   const toggleTodo = (id: number) => {
-    const updateTodos = todos.map( todo => {
-        if(todo.id === id){
-            return {...todo, completed: !todo.completed}
-        }
-        return todo;
-    });
-    setTodos(updateTodos);
+    dispatch({type: 'TOGGLE_TODO', payload: id})
   };
 
   const deleteTodo = (id: number) => {
-     const updateTodos = todos.filter(todo => todo.id !== id);
-     setTodos(updateTodos);
+    dispatch({type: 'DELETE_TODO', payload: id})
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
-    console.log(e.key);
     if(e.key === 'Enter'){
         addTodo();
     }
   };
 
   const {todos, completed: completedCount, pending: pendingCount} = state;
+  const totalCount = todos.length;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 p-4">
