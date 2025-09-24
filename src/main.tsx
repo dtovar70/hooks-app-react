@@ -1,10 +1,10 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
-import { MemoHook } from './06-memos/MemoHook.tsx'
+import MemoCounter from './06-memos/MemoCounter.tsx'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <MemoHook />
+    <MemoCounter />
   </StrictMode>,
 )
