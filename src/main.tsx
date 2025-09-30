@@ -6,6 +6,7 @@ import { ProfessionalApp } from './09-useContext/ProfessionalApp.tsx'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
+    <Toaster />
     <ProfessionalApp />
   </StrictMode>,
 )
